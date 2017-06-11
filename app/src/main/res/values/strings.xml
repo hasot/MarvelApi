@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MarvelTest</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="string_some_thing_wrong">Fail</string>
+    <string name="string_getting_json_title">Wait</string>
+
+    <string name="string_getting_json_message">Get informations</string>
+
+
+    <string name="string_textdeveloper"> Релиз MarvelApp  версии 1.0, сборка 1,  бета.</string>
+</resources>
