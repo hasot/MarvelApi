@@ -43,6 +43,20 @@ public class Result {
     @Expose
     private Series series;
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @SerializedName("title")
+    @Expose
+    private String title;
+
+
+
     public String getId() {
         return id;
     }

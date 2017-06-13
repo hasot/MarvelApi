@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.example.root.marveltest.api.RetroClient;
 import com.example.root.marveltest.model.Example;
 import com.example.root.marveltest.model.Result;
 import com.example.root.marveltest.utils.InternetConnection;
+import com.example.root.marveltest.utils.PersonalMarvelApi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,56 +33,55 @@ import retrofit2.Response;
  * Created by root on 07.06.17.
  */
 
-public class ListCharactersFragment extends Fragment {
+public class ListCharactersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-
-    private static final String API_TS = "20";
-    private static final String API_KEY = "7fa7c57fbd7cd942ec4123f516d7690f";
-    private static final String API_HASH = "74e9c8761fda39738459c9f7622e98b6";
 
     private RecyclerView recyclerView;
     private CharactersAdapter adapter;
     private View parentView;
     private ArrayList<Result> charactersList;
-    private HashMap<String, String> connect;
-    private Context mContext;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_main,
+        View view = inflater.inflate(R.layout.fragment_characters_list,
                 container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+
         if (InternetConnection.checkConnection(getActivity().getApplicationContext())) {
-            connectApi();
+            mSwipeRefreshLayout.post(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             mSwipeRefreshLayout.setRefreshing(true);
+                                             connectApi();
+                                         }
+                                     }
+            );
         }
         return view;
     }
 
-    void connectApi() {
+    @Override
+    public void onRefresh() {
+        connectApi();
+    }
 
-        connect = new HashMap<>();
-        connect.put("limit", "" + 100);
-        connect.put("offset", "" + 500);
-        connect.put("ts", API_TS);
-        connect.put("apikey", API_KEY);
-        connect.put("hash", API_HASH);
-        final ProgressDialog dialog;
-
-        dialog = new ProgressDialog(getActivity());
-        dialog.setTitle(getString(R.string.string_getting_json_title));
-        dialog.setMessage(getString(R.string.string_getting_json_message));
-        dialog.show();
+    private void connectApi() {
+        mSwipeRefreshLayout.setRefreshing(true);
 
         ApiService api = RetroClient.getApiService();
-        Call<Example> callComics = api.getTasks(connect);
+        Call<Example> callComics = api.getTasks(PersonalMarvelApi.getKeyHashMain());
 
         callComics.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
-                dialog.dismiss();
 
                 if (response.isSuccessful()) {
 
@@ -91,16 +92,19 @@ public class ListCharactersFragment extends Fragment {
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(adapter);
+                    mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     Snackbar.make(parentView, R.string.string_some_thing_wrong, Snackbar.LENGTH_LONG).show();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                dialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
     }
+
 }

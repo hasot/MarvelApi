@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by Ravi Tamada on 18/05/16.
  */
-public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.MyViewHolder> {
+public class ComicsAdapter extends RecyclerView.Adapter<ComicsAdapter.MyViewHolder> {
 
 
     private Context mContext;
@@ -46,11 +46,9 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.My
     }
 
 
-    public CharactersAdapter(Context mContext, List<Result> albumList) {
+    public ComicsAdapter(Context mContext, List<Result> characterList) {
         this.mContext = mContext;
-        this.resultList = albumList;
-
-
+        this.resultList = characterList;
     }
 
     @Override
@@ -65,23 +63,11 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Result result = resultList.get(position);
 
-        holder.title.setText(result.getName());
+        holder.title.setText(result.getTitle());
         // loading album cover using Glide library
         Picasso.with(mContext)
                 .load(result.getThumbnail().getPath() + "." + result.getThumbnail().getExtension())
                 .into(holder.thumbnail);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CharacterActivity.class);
-                Bundle extras = new Bundle();
-                extras.putString("id", result.getId());
-                extras.putString("name", result.getName());
-                extras.putString("image", result.getThumbnail().getPath() + "." + result.getThumbnail().getExtension());
-                intent.putExtras(extras);
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override

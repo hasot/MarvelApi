@@ -83,21 +83,7 @@ public class CharacterActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.apply, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.apply: {
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -20,7 +20,19 @@ public interface ApiService {
     Call<Example> getTasks(@QueryMap Map<String, String> options);
 
 
-    @GET("v1/public/characters/{path}")
-    Call<Example> getCharacter(@Path("path") int groupId, @QueryMap Map<String, String> options);
+    @GET("v1/public/characters/{id}/comics ")
+    Call<Example> getComics(@Path("id") String groupId, @QueryMap Map<String, String> options);
+
+
+    @GET("v1/public/characters/{id}/events ")
+    Call<Example> getEvents(@Path("id") String groupId, @QueryMap Map<String, String> options);
+
+
+    @GET("v1/public/characters/{id}/series ")
+    Call<Example> getSeries(@Path("id") String groupId, @QueryMap Map<String, String> options);
+
+
+    @GET("v1/public/characters/{id}/stories ")
+    Call<Example> getStories(@Path("id") String groupId, @QueryMap Map<String, String> options);
 
 }
